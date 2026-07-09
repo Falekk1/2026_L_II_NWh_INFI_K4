@@ -1,4 +1,5 @@
 version: 2.1
+
 jobs:
   build-and-test:
     machine:
@@ -10,7 +11,12 @@ jobs:
       - run: make lint
       - run: make test
       - run: make docker_build
-      - run: make docker_push
+      - run:
+          name: Docker Hub Login and Push
+          command: |
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin
+            make docker_push
+
 workflows:
   basic:
     jobs:
